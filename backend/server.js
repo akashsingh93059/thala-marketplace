@@ -1510,7 +1510,7 @@ app.get('/api/admin/stats', authenticate, requireAdmin, async (req, res) => {
 app.use('/api', (req, res) => res.status(404).json({ message: 'Not found' }));
 
 // Serve static frontend files in production
-const frontendPath = path.join(__dirname, '../frontend/public');
+const frontendPath = path.join(__dirname, 'public');
 console.log('[static] check frontend path:', frontendPath);
 if (fs.existsSync(frontendPath)) {
   console.log('[static] serving frontend from:', frontendPath);
