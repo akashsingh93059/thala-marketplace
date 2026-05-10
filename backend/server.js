@@ -1511,13 +1511,23 @@ app.use('/api', (req, res) => res.status(404).json({ message: 'Not found' }));
 
 // Serve static frontend files in production
 const frontendPath = path.join(__dirname, '../frontend/public');
+console.log('[static] check frontend path:', frontendPath);
 if (fs.existsSync(frontendPath)) {
+  console.log('[static] serving frontend from:', frontendPath);
   app.use(express.static(frontendPath));
   // Catch-all to serve index.html for React routing
   app.get('*', (req, res, next) => {
     if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) return next();
     res.sendFile(path.join(frontendPath, 'index.html'));
   });
+} else {
+  console.error('[static] CRITICAL: frontend folder NOT FOUND at:', frontendPath);
+  console.log('[static] current __dirname:', __dirname);
+  console.log('[static] listing parent directory contents...');
+  try {
+    const parentDir = path.join(__dirname, '..');
+    console.log('[static] contents of', parentDir, ':', fs.readdirSync(parentDir));
+  } catch (e) { console.error('[static] could not read parent dir'); }
 }
 
 app.use((err, req, res, next) => {
