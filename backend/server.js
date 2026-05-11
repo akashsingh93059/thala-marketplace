@@ -45,7 +45,18 @@ if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 const app = express();
 app.set('trust proxy', 1);
 // helmet but allow cross-origin resources for /uploads
-app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "script-src": ["'self'", "'unsafe-inline'", "'unsafe-eval'", "cdn.jsdelivr.net", "unpkg.com", "cdn.tailwindcss.com", "accounts.google.com"],
+      "img-src": ["'self'", "data:", "blob:", "via.placeholder.com", "*.openstreetmap.org", "res.cloudinary.com"],
+      "frame-src": ["'self'", "accounts.google.com"],
+      "connect-src": ["'self'", "*.mongodb.net", "res.cloudinary.com", "*.onrender.com"]
+    },
+  },
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 app.use(express.json({ limit: '256kb' }));
 app.use(cors({
   origin: (origin, cb) => {
