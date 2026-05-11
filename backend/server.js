@@ -9,7 +9,6 @@ const mongoose = require('mongoose');
 const jwt      = require('jsonwebtoken');
 const bcrypt   = require('bcryptjs');
 const cors     = require('cors');
-const helmet   = require('helmet');
 const rateLimit = require('express-rate-limit');
 const multer   = require('multer');
 const { OAuth2Client } = require('google-auth-library');
@@ -44,11 +43,7 @@ if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR, { recursive: true });
 
 const app = express();
 app.set('trust proxy', 1);
-// helmet but allow cross-origin resources for /uploads
-app.use(helmet({
-  contentSecurityPolicy: false,
-  crossOriginResourcePolicy: { policy: 'cross-origin' }
-}));
+
 app.use(express.json({ limit: '256kb' }));
 app.use(cors({
   origin: (origin, cb) => {
